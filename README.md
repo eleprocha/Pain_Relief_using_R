@@ -552,7 +552,7 @@ pain1=data.frame(Pain_Relief,Elite)#προσθέτουμε τη νεα μετα�
 
 
 
-# δεν ξεχνάμε να μετασχηματίσουμε την Η0 !!!
+#  μετασχηματίzουμε την Η0
 #mu.0=bc.t(25,0.4);mu.0
 #t.test(tr.x,alternative="two.sided",mu=mu.0,conf.level=0.95)
 #αυτο δεν το καταλαβα
@@ -618,6 +618,8 @@ res.b$confpoints
 library(gmodels)
 CrossTable(Pain_Relief$Active,Pain_Relief$Score_1)
 
+
+
 Pain.active<-split(Pain_Relief$Score_1,Pain_Relief$Active,drop=False)#1os tropos να χωρίσουμε το Score1 σε Αctive και Inactive
 
 Origin.F<-Pain_Relief$Active
@@ -658,4 +660,91 @@ stats.d(Change.group[[2]])
 hist(Scores2.Group[[1]])
 hist(Scores2.Group[[2]])
 par(mfrow=c(1,1))
+
+
+#F test για την ισότητα των διακυμάνσεων στις υποομάδες του Score2 active & not
+var.test(Scores2.Group[[1]],Scores2.Group[[2]],alternative = "two.sided")
+
+#####################################
+
+
+wilcox.test(Change.group[[1]],Change.group[[2]],paired=FALSE)####### ελεγχος ισότητας των δυομέσων
+wilcox.test(Scores2.Group[[1]],Scores2.Group[[2]],paired=FALSE)
+
+#############ζευγαρωτες παρατηρησεις (έλεγχος για την ισόττα τν δύο μέσων)######
+wilcox.test(Scores1.Group[[1]] ,Scores2.Group[[1]],alternative="less",paired=TRUE)
+wilcox.test(Scores1.Group[[2]],Scores2.Group[[2]],alternative="less",paired=TRUE)
+
+#__________________________________________________________________________________________________
+#vizualization
+#__________________________________________________________________________________________________
+mydatt = read.csv("C:/Users/eleni/Desktop/Pain_Relief.txt", sep="")
+stats.d(mydatt$Score_1)
+stats.d(mydatt$Score_2)
+stats.d(mydatt$Change)
+summary(mydatt)
+Sys.setlocale("LC_CTYPE","Greek")
+On_freq=table(mydatt$Active)
+windows(width=6,height=4,rescale="fixed")
+pie(On_freq,col=gray(seq(0.6,1.0,length=3)),
+    main="Κυκλικό Διάγραμμα για Active",cex=0.9,cex.main=1.0)
+boxplot(mydatt$fev,col="red",main="thikoramma gia to s;ynolo tvn dedomenvn",ylab="litra ekpneomenoy aera")                       
+
+
+qqnorm(mydatt$Score_1,main = "QQ-PLOT (Score_1)")
+qqline(mydatt$Score_1)
+qqnorm(mydatt$Score_2,main = "QQ-PLOT (Score_2)")
+qqline(mydatt$Score_2)
+qqnorm(mydatt$Change,main = "QQ-PLOT (Change)")
+qqline(mydatt$Change)
+boxplot(mydatt$Score_1,mydatt$Score_2,mydatt$Change,col="azure2", main="Θηκογράμματα",ylab="Επίπεδο Πόνου",names=c("Score_1","Score_2","Change"))
+hist(mydatt$Score_1,breaks=10,prob=T,col="azure2", main="Ιστόγραμμα Score_1", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(mydatt$Score_1))
+hist(mydatt$Score_2,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Score_2", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(mydatt$Score_2))
+hist(mydatt$Change,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Change", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(mydatt$Change))
+
+###diaxvrismos
+Change.Act2<-split(mydatt$Score_2,mydatt$Active)
+Change.Act1<-split(mydatt$Score_1,mydatt$Active)
+Change.Act<-split(mydatt$Change,mydatt$Active)
+par(mfrow=c(2,2))
+boxplot(Change.Act2,main="Θηκόγραμμα Score_2",names=c("Ακτινοθεραπεία", "Ομάδα Ελέγχου"),ylab="Επίπεδο Πόνου",col="seagreen4")
+boxplot(Change.Act1,main="Θηκόγραμμα Score_1",names=c("Ακτινοθεραπεία", "Ομάδα Ελέγχου"),ylab="Επίπεδο Πόνου",col="seagreen4")
+boxplot(Change.Act,main="Θηκόγραμμα Change",names=c("Ακτινοθεραπεία", "Ομάδα Ελέγχου"),ylab="Επίπεδο Πόνου",col="seagreen4")
+par(mfrow=c(3,2),main="QQ-plots")
+qqnorm(Change.Act$`1`,main = "Change: Ακτινοθεραπεία")
+qqline(Change.Act$`1`)
+qqnorm(Change.Act$`2`,main = "Change: Ομάδα Ελέγχου")
+qqline(Change.Act$`2`)
+qqnorm(Change.Act1$`1`,main = "Score_1: Ακτινοθεραπεία")
+qqline(Change.Act1$`1`)
+qqnorm(Change.Act1$`2`,main = "Score_1 Ομάδα Ελέγχου")
+qqline(Change.Act1$`2`)
+qqnorm(Change.Act2$`1`,main = "Score_2: Ομάδα Ελέγχου")
+qqline(Change.Act2$`1`)
+qqnorm(Change.Act2$`2`,main = "Score_2: Ομάδα Ελέγχου")
+qqline(Change.Act2$`2`)
+par(mfrow=c(3,2))
+hist(Change.Act1$`1`,breaks=5,prob=T,col="azure2", main="Ιστόγραμμα Score_1: Ακτινοθεραπεία", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act1$`1`))
+hist(Change.Act1$`2`,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Score_1 : Ομάδα Ελέγχου", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act1$`2`))
+hist(Change.Act2$`1`,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Score_2: Ακτινοθεραπεία", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act2$`1`))
+hist(Change.Act2$`2`,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Score_2: Ομάδα Ελέγχου", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act2$`2`))
+hist(Change.Act$`1`,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Change: Ακτινοθεραπεία", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act2$`1`))
+hist(Change.Act$`2`,breaks=10,col="azure2",prob=T, main="Ιστόγραμμα Change: Ομάδα Ελέγχου", xlab="Επίπεδο Πόνου",ylab = "Συχνότητες")
+lines(density(Change.Act$`2`))
+stats.d(Change.Act1$`1`)
+stats.d(Change.Act1$`2`)
+stats.d(Change.Act2$`1`)
+stats.d(Change.Act2$`2`)
+stats.d(Change.Act$`1`)
+stats.d(Change.Act$`2`)
+
+
 
