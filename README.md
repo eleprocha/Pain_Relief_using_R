@@ -9,7 +9,7 @@ stats.d(Pain_Relief$Score_1)
 ########################################################
 #
 # R-πακέτα και συναρήσεις για τα μαθήματα στατιστικής
-# Κάντε run το αρχείο, και σώστε στο workspace
+# run το αρχείο και save στο workspace
 #
 ########################################################
 
@@ -21,7 +21,7 @@ my.packages=c("TeachingDemos","MASS","pwr","car","lmtest","TSA","UsingR","SMIR",
 install.packages(my.packages,repos='http://cloud.r-project.org')
 
 
-### ΣΥΝΑΡΤΗΣΕΙΣ ΓΙΑ ΜΑΘΗΜΑΤΑ ΣΤΑΤΙΣΤΙΚΗΣ
+### ΣΥΝΑΡΤΗΣΗ stats.d
 
 stats.d=function(x,s.trim=0.05,my.adjust=2,my.factor=2,...)
 {# descriptive statistics
